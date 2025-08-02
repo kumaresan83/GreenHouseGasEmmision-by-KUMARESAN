@@ -1,0 +1,176 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenhouse Gas Emission Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e6f7e6;
+        }
+        .text-green-800 { color: #294c77; }
+        .text-green-700 { color: #294c77; }
+        .bg-green-600 { background-color: #669933; }
+        .hover\:bg-green-700:hover { background-color: #55802b; }
+        .focus\:ring-green-500:focus { border-color: #669933; }
+        .focus\:border-green-500:focus { border-color: #669933; }
+        .text-green-900 { color: #294c77; }
+        .bg-green-50 { background-color: #f0fdf4; }
+        .border-green-300 { border-color: #d1fae5; }
+        .form-container {
+            background-color: #ffffff;
+            border-color: #669933;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="predictor-page" class="form-container rounded-xl shadow-lg p-8 md:p-12 w-full max-w-4xl border-2">
+        
+        <div class="flex items-center space-x-4 mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-green-700" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <div>
+                <h1 class="text-3xl font-bold text-green-800">Greenhouse Gas Emission Predictor</h1>
+                <p class="text-gray-600 mt-2">Estimate total emissions based on supply chain factors and data quality metrics.</p>
+            </div>
+        </div>
+
+        <hr class="my-6 border-green-200">
+
+        <form id="predictor-form-content" class="space-y-6">
+            
+            <div class="grid md:grid-cols-2 gap-6 mt-8">
+                <div class="flex items-center space-x-2">
+                    <label for="substance" class="w-32 font-medium text-gray-700">Type of Gas:</label>
+                    <select id="substance" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        <option>carbon dioxide</option>
+                        <option>methane</option>
+                        <option>nitrous oxide</option>
+                        <option>other GHGs</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="unit" class="w-32 font-medium text-gray-700">Measurement Unit:</label>
+                    <select id="unit" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        <option>kg/2018 USD, purchaser price</option>
+                        <option>kg CO2e/2018 USD, purchaser price</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="supply-wo-margin" class="w-32 font-medium text-gray-700">Est. Emissions:</label>
+                    <input type="number" id="supply-wo-margin" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" placeholder="0.0" min="0">
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="margin" class="w-32 font-medium text-gray-700">Margin of Error:</label>
+                    <input type="number" id="margin" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" placeholder="0.0" min="0">
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-green-800 pt-6">Data Quality</h2>
+            <p class="text-gray-600 italic">Please rate the quality of your data on a scale from 0.0 (low quality) to 1.0 (high quality).</p>
+            
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label for="dq-reliability" class="text-lg font-medium text-gray-700">Reliability of Data</label>
+                        <span id="dq-reliability-value" class="text-green-700 font-bold">0.00</span>
+                    </div>
+                    <input type="range" id="dq-reliability" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" min="0" max="1" step="0.01" value="0.0">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label for="dq-temporal" class="text-lg font-medium text-gray-700">Timeliness of Data</label>
+                        <span id="dq-temporal-value" class="text-green-700 font-bold">0.00</span>
+                    </div>
+                    <input type="range" id="dq-temporal" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" min="0" max="1" step="0.01" value="0.0">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label for="dq-geo" class="text-lg font-medium text-gray-700">Geographic Relevance</label>
+                        <span id="dq-geo-value" class="text-green-700 font-bold">0.00</span>
+                    </div>
+                    <input type="range" id="dq-geo" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" min="0" max="1" step="0.01" value="0.0">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label for="dq-tech" class="text-lg font-medium text-gray-700">Technological Relevance</label>
+                        <span id="dq-tech-value" class="text-green-700 font-bold">0.00</span>
+                    </div>
+                    <input type="range" id="dq-tech" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" min="0" max="1" step="0.01" value="0.0">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label for="dq-data" class="text-lg font-medium text-gray-700">Data Collection Quality</label>
+                        <span id="dq-data-value" class="text-green-700 font-bold">0.00</span>
+                    </div>
+                    <input type="range" id="dq-data" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" min="0" max="1" step="0.01" value="0.0">
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center space-y-4 pt-8">
+                <button type="button" id="predict-button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-200">
+                    Predict Emission Factor
+                </button>
+                <div id="output-container" class="mt-4 p-4 bg-green-50 text-green-900 border-2 border-green-300 rounded-lg text-xl font-bold flex items-center justify-center space-x-4 w-full">
+                    <span id="result-text">Predicted Factor = 0.0000</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const predictButton = document.getElementById('predict-button');
+        const resultText = document.getElementById('result-text');
+
+        const sliders = [
+            { input: document.getElementById('dq-reliability'), valueSpan: document.getElementById('dq-reliability-value') },
+            { input: document.getElementById('dq-temporal'), valueSpan: document.getElementById('dq-temporal-value') },
+            { input: document.getElementById('dq-geo'), valueSpan: document.getElementById('dq-geo-value') },
+            { input: document.getElementById('dq-tech'), valueSpan: document.getElementById('dq-tech-value') },
+            { input: document.getElementById('dq-data'), valueSpan: document.getElementById('dq-data-value') }
+        ];
+
+        sliders.forEach(slider => {
+            slider.input.addEventListener('input', () => {
+                slider.valueSpan.textContent = parseFloat(slider.input.value).toFixed(2);
+            });
+        });
+
+        predictButton.addEventListener('click', () => {
+            const formData = {
+                'supply_wo_margin': parseFloat(document.getElementById('supply-wo-margin').value) || 0,
+                'margin': parseFloat(document.getElementById('margin').value) || 0,
+                'dq_reliability': parseFloat(document.getElementById('dq-reliability').value),
+                'dq_temporal': parseFloat(document.getElementById('dq-temporal').value),
+                'dq_geo': parseFloat(document.getElementById('dq-geo').value),
+                'dq_tech': parseFloat(document.getElementById('dq-tech').value),
+                'dq_data': parseFloat(document.getElementById('dq-data').value)
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultText.textContent = `Error: ${data.error}`;
+                } else {
+                    resultText.textContent = `Predicted Factor = ${data.predicted_factor.toFixed(4)}`;
+                }
+            })
+            .catch((error) => {
+                resultText.textContent = `Prediction failed: ${error}`;
+            });
+        });
+    });
+ </script>
+</body>
+</html>
